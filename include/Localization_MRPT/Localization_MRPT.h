@@ -468,7 +468,8 @@ class Localization_MRPT
   // <rtc-template block="private_operation">
   
   // </rtc-template>
-
+	 
+     void update_conf(std::string param, std::string new_val);
 
 	 bool m_odomUpdated, m_rangeUpdated;
 

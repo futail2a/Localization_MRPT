@@ -478,7 +478,11 @@ RTC::ReturnCode_t Localization_MRPT::onRateChanged(RTC::UniqueId ec_id)
 }
 */
 
-
+void update_conf(std::string param, std::string new_val)
+{
+	std::string cmd = "rtconf localhost/LocalizationMRPT0.rtc set" + param + " " + new_val;
+	system(cmd.c_str());
+}
 
 extern "C"
 {
