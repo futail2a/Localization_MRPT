@@ -19,7 +19,7 @@ static const char* localization_mrpt_spec[] =
     "description",       "Localization MRPT Component",
     "version",           "1.0.0",
     "vendor",            "Sugar Sweet Robotics",
-    "category",          "Navigatio",
+    "category",          "Navigation",
     "activity_type",     "PERIODIC",
     "kind",              "DataFlowComponent",
     "max_instance",      "1",
@@ -30,14 +30,14 @@ static const char* localization_mrpt_spec[] =
     "conf.default.max_x", "0.01",
     "conf.default.min_y", "-0.01",
     "conf.default.max_y", "0.01",
-    "conf.default.min_phi", "-0.01",
-    "conf.default.max_phi", "0.01",
+    "conf.default.min_phi", "-0.05",
+    "conf.default.max_phi", "0.05",
     "conf.default.range_min", "0.3",
     "conf.default.range_max", "10",
-    "conf.default.gausianModel_minStdXY", "0.01",
-    "conf.default.gausianModel_minStdPHI", "0.01",
-    "conf.default.KLD_binSize_PHI", "0.01",
-    "conf.default.KLD_binSize_XY", "0.01",
+    "conf.default.gausianModel_minStdXY", "0.1",
+    "conf.default.gausianModel_minStdPHI", "2.0",
+    "conf.default.KLD_binSize_PHI", "20",
+    "conf.default.KLD_binSize_XY", "0.2",
     "conf.default.KLD_delta", "0.02",
     "conf.default.KLD_epsilon", "0.02",
     "conf.default.KLD_maxSampleSize", "1000",
@@ -303,15 +303,15 @@ RTC::ReturnCode_t Localization_MRPT::onActivated(RTC::UniqueId ec_id)
   do {
 	  coil::sleep(1);
 	  std::cout << "[RTC::Localization_MRPT] Waiting for Map Server Activation" << std::endl;
-	  if((*(rto->get_owned_contexts()))[0]->get_component_state(rto) == RTC::LifeCycleState::ERROR_STATE) {
+	  if((*(rto->get_owned_contexts()))[0]->get_component_state(rto) == RTC::ERROR_STATE) {
 		  std::cout << "[RTC::Localization_MRPT] Map Server RTC is now in ERROR_STATE" << std::endl;
 		  return RTC::RTC_ERROR;
 	  }
-  } while ((*(rto->get_owned_contexts()))[0]->get_component_state(rto) != RTC::LifeCycleState::ACTIVE_STATE);
+  } while ((*(rto->get_owned_contexts()))[0]->get_component_state(rto) != RTC::ACTIVE_STATE);
 
   RTC::RETURN_VALUE ret = m_mapServer->requestCurrentBuiltMap(ogmap); 
 
-  if (ret != RETURN_VALUE::RETVAL_OK) {
+  if (ret != RTC::RETVAL_OK) {
 	  std::cout << "[RTC::Localization_MRPT] Acquiring Map from Server Failed." << std::endl;
   }
 
@@ -356,7 +356,7 @@ RTC::ReturnCode_t Localization_MRPT::onActivated(RTC::UniqueId ec_id)
   mcl.m_CFD_features_median_size = m_CFD_features_median_size;
   mcl.m_wideningBeamsWithDistance = m_wideningBeamsWithDistance;
 
-  mcl.m_likelihoodMethod = mrpt::slam::COccupancyGridMap2D::TLikelihoodMethod(m_likelihoodMethod);
+  mcl.m_likelihoodMethod = mrpt::maps::COccupancyGridMap2D::TLikelihoodMethod(m_likelihoodMethod);
   mcl.m_enableLikelihoodCache = m_enableLikelihoodCache;
   mcl.m_LF_decimation= m_LF_decimation;
   mcl.m_LF_stdHit= m_LF_stdHit;
@@ -428,13 +428,12 @@ RTC::ReturnCode_t Localization_MRPT::onExecute(RTC::UniqueId ec_id)
   }
 
   if(m_rangeUpdated && m_odomUpdated) {
-    CPose2D estPose;
+    mrpt::poses::CPose2D estPose;
     estPose = mcl.getEstimatedPose();
-   
 	m_estimatedPose.data.position.x = estPose.x();
 	m_estimatedPose.data.position.y = estPose.y();
 	m_estimatedPose.data.heading    = estPose.phi();
-	
+	setTimestamp<TimedPose2D>(m_estimatedPose);
 	m_estimatedPoseOut.write();
   }
   
