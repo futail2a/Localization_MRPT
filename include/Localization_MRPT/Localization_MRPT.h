@@ -362,6 +362,20 @@ class Localization_MRPT
   //	2: pfOptimalProposal    
   //	3: pfAuxiliaryPFOptimal	  ***
   */
+
+  /*!
+   * 
+   * - Name:  group_name
+   * - DefaultValue: mcl
+   */
+  std::string m_group_name;
+  /*!
+   * 
+   * - Name:  priority
+   * - DefaultValue: 1
+   */
+  int m_priority;
+
   int m_PF_algorithm;
   /*!
   // The Particle Filter Resampling method:
