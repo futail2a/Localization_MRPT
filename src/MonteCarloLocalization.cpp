@@ -83,7 +83,7 @@ void  MCLocalization_MRPT::initialize(){
 
 bool MCLocalization_MRPT::addPose(const ssr::Pose2D& deltaPose)
 {
-        mrpt::obs::CActionRobotMovement2D action;
+    mrpt::obs::CActionRobotMovement2D action;
 	mrpt::obs::CActionRobotMovement2D::TMotionModelOptions options;
 	action.computeFromOdometry(mrpt::poses::CPose2D(deltaPose.x, deltaPose.y, deltaPose.th), motion_model_options_);
 	action.timestamp = mrpt::system::getCurrentTime();
