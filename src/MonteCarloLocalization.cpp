@@ -120,7 +120,10 @@ bool MCLocalization_MRPT::addRange(const ssr::Range& range)
 }
 
 mrpt::poses::CPose2D MCLocalization_MRPT::getEstimatedPose(){
-    pf_.executeOn(pdf_,& m_ActionCollection,& m_SensoryFrame, &pf_stats_);
+	pdf_.StringToObject(m_particles);
+	//pdf_.copyFrom(m_particles);
+	pf_.executeOn(pdf_, &m_ActionCollection, &m_SensoryFrame, &pf_stats_);
+	m_particles = pdf_.ObjectToString();
 	return pdf_.getMeanVal();
 }
 

@@ -375,6 +375,12 @@ class Localization_MRPT
    * - DefaultValue: 1
    */
   int m_priority;
+  /*!
+  *
+  * - Name:  particles
+  * - DefaultValue: 0
+  */
+  std::string m_particles;
 
   int m_PF_algorithm;
   /*!

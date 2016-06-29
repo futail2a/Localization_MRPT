@@ -85,7 +85,8 @@ static const char* localization_mrpt_spec[] =
 
     "conf.default.poseTimeOut", "3.0",
     "conf.default.group_name", "mcl",
-    "conf.default.priority", "1",
+	"conf.default.priority", "1",
+	"conf.default.particles", "0",
 
     // Widget
     "conf.__widget__.min_x", "text",
@@ -147,7 +148,8 @@ static const char* localization_mrpt_spec[] =
 
     "conf.__widget__.poseTimeOut", "text",
     "conf.__widget__.group_name", "text",
-    "conf.__widget__.priority", "text",
+	"conf.__widget__.priority", "text",
+	"conf.__widget__.particles", "text",
     // Constraints
 	 "conf.__constraints__.PF_algorithm", "(pfStandardProposal,  pfAuxiliaryPFStandard, pfOptimalProposal, pfAuxiliaryPFOptimal)",
      "conf.__constraints__.resamplingMethod", "(prMultinomials, prResidual, prStratified, prSystematic)",
@@ -264,6 +266,7 @@ RTC::ReturnCode_t Localization_MRPT::onInitialize()
   bindParameter("poseTimeOut", m_poseTimeOut, "3.0");
   bindParameter("group_name", m_group_name, "mcl");
   bindParameter("priority", m_priority, "1");
+  bindParameter("particles", m_particles, "0");
   // </rtc-template>
 
   return RTC::RTC_OK;

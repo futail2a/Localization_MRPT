@@ -243,7 +243,7 @@ namespace ssr{
 	*/
 	class MCLocalization_MRPT{
 	public:
-                mrpt::maps::COccupancyGridMap2D m_map;
+        mrpt::maps::COccupancyGridMap2D m_map;
 		//CMultiMetricMap m_metricmap;
 		mrpt::slam::CMonteCarloLocalization2D pdf_;
 		mrpt::bayes::CParticleFilter::TParticleFilterOptions pfOptions_;		
@@ -258,6 +258,8 @@ namespace ssr{
 		mrpt::obs::CSensoryFrame m_SensoryFrame;
 		mrpt::poses::CPose3D m_RangeSensorPose;
 		mrpt::poses::CPosePDFGaussian initialPose_;
+
+		std::string m_particles;
 
 		//CPose2D estimatedPose;
 		float m_range_min;
