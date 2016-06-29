@@ -238,6 +238,9 @@ namespace ssr{
 		}
 	};
 
+	DEFINE_SERIALIZABLE_PRE(MonteCarloLocalization2D)
+	class MonteCarloLocalization2D : public mrpt::slam::CMonteCarloLocalization2D, mrpt::utils::CSerializable{ DEFINE_SERIALIZABLE(MonteCarloLocalization2D)};
+
 	/**
 	*
 	*/
@@ -245,7 +248,7 @@ namespace ssr{
 	public:
         mrpt::maps::COccupancyGridMap2D m_map;
 		//CMultiMetricMap m_metricmap;
-		mrpt::slam::CMonteCarloLocalization2D pdf_;
+		MonteCarloLocalization2D pdf_;
 		mrpt::bayes::CParticleFilter::TParticleFilterOptions pfOptions_;		
 		mrpt::bayes::CParticleFilter::TParticleFilterStats pf_stats_;
 		mrpt::bayes::CParticleFilter pf_;

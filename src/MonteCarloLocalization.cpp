@@ -2,6 +2,14 @@
 
 using namespace ssr;
 
+IMPLEMENTS_SERIALIZABLE(MonteCarloLocalization2D, CSerializable, ssr)
+
+std::string MonteCarloLocalization2D::ObjectToString(const CSerializable *o){
+
+}
+void MonteCarloLocalization2D::StringToObject(const std:string &str, CSerializablePtr &obj){
+
+}
 
 MCLocalization_MRPT::MCLocalization_MRPT(){
 	//constractor 
@@ -79,6 +87,8 @@ void  MCLocalization_MRPT::initialize(){
 	pdf_.resetUniform(m_map.getXMin(), m_map.getXMax(),
 			  m_map.getYMin(), m_map.getYMax(),
 			  -M_PI, M_PI, m_particles_count);//, m_min_phi, m_max_phi);
+
+	m_particles = mrpt::utils::ObjectToString(pdf_);
 }
 
 bool MCLocalization_MRPT::addPose(const ssr::Pose2D& deltaPose)
@@ -120,10 +130,10 @@ bool MCLocalization_MRPT::addRange(const ssr::Range& range)
 }
 
 mrpt::poses::CPose2D MCLocalization_MRPT::getEstimatedPose(){
-	pdf_.StringToObject(m_particles);
+	mrpt::utils::StringToObject(m_particles, pdf_);
 	//pdf_.copyFrom(m_particles);
 	pf_.executeOn(pdf_, &m_ActionCollection, &m_SensoryFrame, &pf_stats_);
-	m_particles = pdf_.ObjectToString();
+	m_particles = mrpt::utils::ObjectToString(pdf_);
 	return pdf_.getMeanVal();
 }
 
