@@ -238,9 +238,8 @@ namespace ssr{
 		}
 	};
 
-	DEFINE_SERIALIZABLE_PRE(MonteCarloLocalization2D)
-	class MonteCarloLocalization2D : public mrpt::slam::CMonteCarloLocalization2D, mrpt::utils::CSerializable{ DEFINE_SERIALIZABLE(MonteCarloLocalization2D)};
-
+	std::vector<std::string> ObjectToString(mrpt::slam::CMonteCarloLocalization2D pdf_);
+	void StringToObject(std::vector<std::string> str, mrpt::slam::CMonteCarloLocalization2D pdf_);
 	/**
 	*
 	*/
@@ -248,7 +247,7 @@ namespace ssr{
 	public:
         mrpt::maps::COccupancyGridMap2D m_map;
 		//CMultiMetricMap m_metricmap;
-		MonteCarloLocalization2D pdf_;
+		mrpt::slam::CMonteCarloLocalization2D pdf_;
 		mrpt::bayes::CParticleFilter::TParticleFilterOptions pfOptions_;		
 		mrpt::bayes::CParticleFilter::TParticleFilterStats pf_stats_;
 		mrpt::bayes::CParticleFilter pf_;
@@ -262,7 +261,7 @@ namespace ssr{
 		mrpt::poses::CPose3D m_RangeSensorPose;
 		mrpt::poses::CPosePDFGaussian initialPose_;
 
-		std::string m_particles;
+		std::vector<std::string> m_particles;
 
 		//CPose2D estimatedPose;
 		float m_range_min;

@@ -2,13 +2,23 @@
 
 using namespace ssr;
 
-IMPLEMENTS_SERIALIZABLE(MonteCarloLocalization2D, CSerializable, ssr)
-
-std::string MonteCarloLocalization2D::ObjectToString(const CSerializable *o){
-
+std::vector<std::string> ObjectToString(mrpt::slam::CMonteCarloLocalization2D pdf_){
+	std::vector<std::string> str;
+	for (int i = 0; i < pdf_.m_particles.size(); i+=4){
+		str[i] = std::to_string(pdf_.m_particles[i].d.x());
+		str[i+1] = std::to_string(pdf_.m_particles[i].d.y());
+		str[i+2] = std::to_string(pdf_.m_particles[i].d.phi());
+		str[i+3] = std::to_string(pdf_.m_particles[i].log_w);
+	}
+	return str;
 }
-void MonteCarloLocalization2D::StringToObject(const std:string &str, CSerializablePtr &obj){
-
+void StringToObject(std::vector<std::string> str, mrpt::slam::CMonteCarloLocalization2D &pdf_){
+	for (int i = 0; i < pdf_.m_particles.size(); i+=4){
+		pdf_.m_particles[i].d.x = str[i];
+		pdf_.m_particles[i+1].d.y = str[i];
+		pdf_.m_particles[i+2].d.phi = str[i];
+		pdf_.m_particles[i+3].log_w = str[i];
+	}
 }
 
 MCLocalization_MRPT::MCLocalization_MRPT(){
@@ -88,7 +98,7 @@ void  MCLocalization_MRPT::initialize(){
 			  m_map.getYMin(), m_map.getYMax(),
 			  -M_PI, M_PI, m_particles_count);//, m_min_phi, m_max_phi);
 
-	m_particles = mrpt::utils::ObjectToString(pdf_);
+	m_particles = ObjectToString(pdf_);
 }
 
 bool MCLocalization_MRPT::addPose(const ssr::Pose2D& deltaPose)
@@ -130,10 +140,10 @@ bool MCLocalization_MRPT::addRange(const ssr::Range& range)
 }
 
 mrpt::poses::CPose2D MCLocalization_MRPT::getEstimatedPose(){
-	mrpt::utils::StringToObject(m_particles, pdf_);
+	StringToObject(m_particles, pdf_);
 	//pdf_.copyFrom(m_particles);
 	pf_.executeOn(pdf_, &m_ActionCollection, &m_SensoryFrame, &pf_stats_);
-	m_particles = mrpt::utils::ObjectToString(pdf_);
+	m_particles = ObjectToString(pdf_);
 	return pdf_.getMeanVal();
 }
 
