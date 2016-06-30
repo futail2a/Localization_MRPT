@@ -2,23 +2,23 @@
 
 using namespace ssr;
 
-std::vector<std::string> ObjectToString(mrpt::slam::CMonteCarloLocalization2D &pdf_){
-	std::vector<std::string> particles_data;
+std::vector<std::string> extractParticleParams(mrpt::slam::CMonteCarloLocalization2D &pdf_){
+	std::vector<std::string> particle_params;
 	for (int i = 0; i < pdf_.m_particles.size(); i+=4){
-		particles_data[i] = std::to_string(pdf_.m_particles[i].d->x());
-		particles_data[i + 1] = std::to_string(pdf_.m_particles[i].d->y());
-		particles_data[i + 2] = std::to_string(pdf_.m_particles[i].d->phi());
-		particles_data[i + 3] = std::to_string(pdf_.m_particles[i].log_w);
+		particle_params[i] = std::to_string(pdf_.m_particles[i].d->x());
+		particle_params[i + 1] = std::to_string(pdf_.m_particles[i].d->y());
+		particle_params[i + 2] = std::to_string(pdf_.m_particles[i].d->phi());
+		particle_params[i + 3] = std::to_string(pdf_.m_particles[i].log_w);
 	}
-	return particles_data;
+	return particle_params;
 }
-void StringToObject(std::vector<std::string> particles_data, mrpt::slam::CMonteCarloLocalization2D &pdf_){
+void setParticleParams(std::vector<std::string> particle_params, mrpt::slam::CMonteCarloLocalization2D &pdf_){
 	std::size_t ei;
 	for (int i = 0; i < pdf_.m_particles.size(); i+=4){
-		pdf_.m_particles[i].d->x(atof(particles_data[i].c_str()));
-		pdf_.m_particles[i + 1].d->y(atof(particles_data[i+1].c_str()));
-		pdf_.m_particles[i + 2].d->phi(atof(particles_data[i+2].c_str()));
-		pdf_.m_particles[i + 3].log_w = atof(particles_data[i+3].c_str());
+		pdf_.m_particles[i].d->x(atof(particle_params[i].c_str()));
+		pdf_.m_particles[i + 1].d->y(atof(particle_params[i + 1].c_str()));
+		pdf_.m_particles[i + 2].d->phi(atof(particle_params[i + 2].c_str()));
+		pdf_.m_particles[i + 3].log_w = atof(particle_params[i + 3].c_str());
 	}
 }
 

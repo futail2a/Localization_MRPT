@@ -238,8 +238,8 @@ namespace ssr{
 		}
 	};
 
-	std::vector<std::string> ObjectToString(mrpt::slam::CMonteCarloLocalization2D &pdf_);
-	void StringToObject(std::vector<std::string> particles_data, mrpt::slam::CMonteCarloLocalization2D &pdf_);
+	std::vector<std::string> extractParticleParams(mrpt::slam::CMonteCarloLocalization2D &pdf_);
+	void setParticleParams(std::vector<std::string> particle_params, mrpt::slam::CMonteCarloLocalization2D &pdf_);
 	/**
 	*
 	*/
