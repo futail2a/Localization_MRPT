@@ -78,8 +78,8 @@ void  MCLocalization_MRPT::initialize(){
 	pdf_.resetUniform(m_map.getXMin(), m_map.getXMax(),
 			  m_map.getYMin(), m_map.getYMax(),
 			  -M_PI, M_PI, m_particles_count);//, m_min_phi, m_max_phi);
-	for (int i = 0; i < 1000; i++){
-	//for (int i = 0; i < pdf_.m_particles.size() * 4; i++){
+
+	for (int i = 0; i < pdf_.m_particles.size(); i++){
 		m_particles.push_back("0.0");
 	}
 	m_particles = extractParticleParams(pdf_);
@@ -167,8 +167,7 @@ void MCLocalization_MRPT::OGMap2COccupancyGridMap(RTC::OGMap ogmap, mrpt::maps::
 std::vector<std::string> MCLocalization_MRPT::extractParticleParams(mrpt::slam::CMonteCarloLocalization2D &pdf_){
 	std::vector<std::string> particle_params(pdf_.m_particles.size()*4);
 	int j = 0;
-	for (int i = 0; i < 1000; i ++){
-	//for (int i = 0; i < pdf_.m_particles.size(); i += 4){
+	for (int i = 0; i < pdf_.m_particles.size(); i ++){
 		particle_params[j] = std::to_string(pdf_.m_particles[i].d->x());
 		particle_params[j + 1] = std::to_string(pdf_.m_particles[i].d->y());
 		particle_params[j + 2] = std::to_string(pdf_.m_particles[i].d->phi());
@@ -179,8 +178,7 @@ std::vector<std::string> MCLocalization_MRPT::extractParticleParams(mrpt::slam::
 }
 void MCLocalization_MRPT::setParticleParams(std::vector<std::string> particle_params, mrpt::slam::CMonteCarloLocalization2D &pdf_){
 	int j = 0;
-	for (int i = 0; i < 1000; i ++){
-	//for (int i=0; i < pdf_.m_particles.size(); i+=4){
+	for (int i=0; i < pdf_.m_particles.size(); i++){
 		pdf_.m_particles[i].d->x(atof(particle_params[j].c_str()));
 		pdf_.m_particles[i].d->y(atof(particle_params[j + 1].c_str()));
 		pdf_.m_particles[i].d->phi(atof(particle_params[j + 2].c_str()));
