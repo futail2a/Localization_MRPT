@@ -2,26 +2,6 @@
 
 using namespace ssr;
 
-std::vector<std::string> extractParticleParams(mrpt::slam::CMonteCarloLocalization2D &pdf_){
-	std::vector<std::string> particle_params;
-	for (int i = 0; i < pdf_.m_particles.size(); i+=4){
-		particle_params[i] = std::to_string(pdf_.m_particles[i].d->x());
-		particle_params[i + 1] = std::to_string(pdf_.m_particles[i].d->y());
-		particle_params[i + 2] = std::to_string(pdf_.m_particles[i].d->phi());
-		particle_params[i + 3] = std::to_string(pdf_.m_particles[i].log_w);
-	}
-	return particle_params;
-}
-void setParticleParams(std::vector<std::string> particle_params, mrpt::slam::CMonteCarloLocalization2D &pdf_){
-	std::size_t ei;
-	for (int i = 0; i < pdf_.m_particles.size(); i+=4){
-		pdf_.m_particles[i].d->x(atof(particle_params[i].c_str()));
-		pdf_.m_particles[i + 1].d->y(atof(particle_params[i + 1].c_str()));
-		pdf_.m_particles[i + 2].d->phi(atof(particle_params[i + 2].c_str()));
-		pdf_.m_particles[i + 3].log_w = atof(particle_params[i + 3].c_str());
-	}
-}
-
 MCLocalization_MRPT::MCLocalization_MRPT(){
 	//constractor 
 }
@@ -99,7 +79,7 @@ void  MCLocalization_MRPT::initialize(){
 			  m_map.getYMin(), m_map.getYMax(),
 			  -M_PI, M_PI, m_particles_count);//, m_min_phi, m_max_phi);
 
-	//m_particles = ObjectToString(pdf_);
+	m_particles = extractParticleParams(pdf_);
 }
 
 bool MCLocalization_MRPT::addPose(const ssr::Pose2D& deltaPose)
@@ -180,6 +160,26 @@ void MCLocalization_MRPT::OGMap2COccupancyGridMap(RTC::OGMap ogmap, mrpt::maps::
 	win.showImage(img.scaleDouble().scaleDouble());
 	win.waitForKey();
 	//*/
+}
+
+std::vector<std::string> MCLocalization_MRPT::extractParticleParams(mrpt::slam::CMonteCarloLocalization2D &pdf_){
+	std::vector<std::string> particle_params;
+	for (int i = 0; i < pdf_.m_particles.size(); i += 4){
+		particle_params[i] = std::to_string(pdf_.m_particles[i].d->x());
+		particle_params[i + 1] = std::to_string(pdf_.m_particles[i].d->y());
+		particle_params[i + 2] = std::to_string(pdf_.m_particles[i].d->phi());
+		particle_params[i + 3] = std::to_string(pdf_.m_particles[i].log_w);
+	}
+	return particle_params;
+}
+void MCLocalization_MRPT::setParticleParams(std::vector<std::string> particle_params, mrpt::slam::CMonteCarloLocalization2D &pdf_){
+	std::size_t ei;
+	for (int i = 0; i < pdf_.m_particles.size(); i += 4){
+		pdf_.m_particles[i].d->x(atof(particle_params[i].c_str()));
+		pdf_.m_particles[i + 1].d->y(atof(particle_params[i + 1].c_str()));
+		pdf_.m_particles[i + 2].d->phi(atof(particle_params[i + 2].c_str()));
+		pdf_.m_particles[i + 3].log_w = atof(particle_params[i + 3].c_str());
+	}
 }
 
 void MCLocalization_MRPT::TimedPose2D2CPose2D(const RTC::TimedPose2D & tp, mrpt::poses::CPose2D & cp, const RTC::OGMap & map){

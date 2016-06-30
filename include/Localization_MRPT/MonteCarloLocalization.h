@@ -237,9 +237,6 @@ namespace ssr{
 			return (float)atof(val.c_str());
 		}
 	};
-
-	std::vector<std::string> extractParticleParams(mrpt::slam::CMonteCarloLocalization2D &pdf_);
-	void setParticleParams(std::vector<std::string> particle_params, mrpt::slam::CMonteCarloLocalization2D &pdf_);
 	/**
 	*
 	*/
@@ -358,6 +355,9 @@ namespace ssr{
 			m_range_max = max;
 		}
 		mrpt::poses::CPose2D getEstimatedPose();
+
+		std::vector<std::string> extractParticleParams(mrpt::slam::CMonteCarloLocalization2D &pdf_);
+		void setParticleParams(std::vector<std::string> particle_params, mrpt::slam::CMonteCarloLocalization2D &pdf_);
 
 	protected:
 		void configureFilter(const mrpt::utils::CConfigFile &_configFile);
