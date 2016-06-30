@@ -495,17 +495,15 @@ std::vector<std::string> Localization_MRPT::StringToVector(std::string str){
 }
 
 std::string Localization_MRPT::VectorToString(std::vector<string> v){
-	std::string str;
-	str += v[0];
-	for (int i = 1; i < v.size()-1; i++){
-		str += "," + v[i];
-	}
+	std::string str = boost::algorithm::join(v, ",");
 	return str;
 }
 
 void Localization_MRPT::update_conf(std::string param, std::string new_val)
 {
-	std::string cmd = "rtconf localhost/LocalizationMRPT0.rtc set" + param + " " + new_val;
+	//std::ofstream ofs("C:/Users/ogata/Desktop/particlelog.csv");
+	std::string cmd = "rtconf localhost/rausu.host_cxt/Localization_MRPT0.rtc set " + param + " " + new_val;
+	//ofs << cmd;
 	system(cmd.c_str());
 }
 
