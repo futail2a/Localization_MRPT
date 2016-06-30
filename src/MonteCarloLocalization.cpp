@@ -2,22 +2,23 @@
 
 using namespace ssr;
 
-std::vector<std::string> ObjectToString(mrpt::slam::CMonteCarloLocalization2D pdf_){
-	std::vector<std::string> str;
+std::vector<std::string> ObjectToString(mrpt::slam::CMonteCarloLocalization2D &pdf_){
+	std::vector<std::string> particles_data;
 	for (int i = 0; i < pdf_.m_particles.size(); i+=4){
-		str[i] = std::to_string(pdf_.m_particles[i].d.x());
-		str[i+1] = std::to_string(pdf_.m_particles[i].d.y());
-		str[i+2] = std::to_string(pdf_.m_particles[i].d.phi());
-		str[i+3] = std::to_string(pdf_.m_particles[i].log_w);
+		particles_data[i] = std::to_string(pdf_.m_particles[i].d->x());
+		particles_data[i + 1] = std::to_string(pdf_.m_particles[i].d->y());
+		particles_data[i + 2] = std::to_string(pdf_.m_particles[i].d->phi());
+		particles_data[i + 3] = std::to_string(pdf_.m_particles[i].log_w);
 	}
-	return str;
+	return particles_data;
 }
-void StringToObject(std::vector<std::string> str, mrpt::slam::CMonteCarloLocalization2D &pdf_){
+void StringToObject(std::vector<std::string> particles_data, mrpt::slam::CMonteCarloLocalization2D &pdf_){
+	std::size_t ei;
 	for (int i = 0; i < pdf_.m_particles.size(); i+=4){
-		pdf_.m_particles[i].d.x = str[i];
-		pdf_.m_particles[i+1].d.y = str[i];
-		pdf_.m_particles[i+2].d.phi = str[i];
-		pdf_.m_particles[i+3].log_w = str[i];
+		pdf_.m_particles[i].d->x(atof(particles_data[i].c_str()));
+		pdf_.m_particles[i + 1].d->y(atof(particles_data[i+1].c_str()));
+		pdf_.m_particles[i + 2].d->phi(atof(particles_data[i+2].c_str()));
+		pdf_.m_particles[i + 3].log_w = atof(particles_data[i+3].c_str());
 	}
 }
 
@@ -98,7 +99,7 @@ void  MCLocalization_MRPT::initialize(){
 			  m_map.getYMin(), m_map.getYMax(),
 			  -M_PI, M_PI, m_particles_count);//, m_min_phi, m_max_phi);
 
-	m_particles = ObjectToString(pdf_);
+	//m_particles = ObjectToString(pdf_);
 }
 
 bool MCLocalization_MRPT::addPose(const ssr::Pose2D& deltaPose)
@@ -140,10 +141,10 @@ bool MCLocalization_MRPT::addRange(const ssr::Range& range)
 }
 
 mrpt::poses::CPose2D MCLocalization_MRPT::getEstimatedPose(){
-	StringToObject(m_particles, pdf_);
+	//StringToObject(m_particles, pdf_);
 	//pdf_.copyFrom(m_particles);
 	pf_.executeOn(pdf_, &m_ActionCollection, &m_SensoryFrame, &pf_stats_);
-	m_particles = ObjectToString(pdf_);
+	//m_particles = ObjectToString(pdf_);
 	return pdf_.getMeanVal();
 }
 
