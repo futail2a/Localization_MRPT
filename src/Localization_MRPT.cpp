@@ -441,12 +441,7 @@ RTC::ReturnCode_t Localization_MRPT::onExecute(RTC::UniqueId ec_id)
   if(m_rangeUpdated && m_odomUpdated) {
     mrpt::poses::CPose2D estPose;
     estPose = mcl.getEstimatedPose();
-	/*for (int i = 0; i < mcl.m_particles.size(); i += 4){
-		std::cout << mcl.m_particles[i] << std::endl;
-		std::cout << mcl.m_particles[i+1]  << std::endl;
-		std::cout << mcl.m_particles[i+2]  << std::endl;
-		std::cout << mcl.m_particles[i+3]  << std::endl;
-	}*/
+	update_conf("particles",VectorToString(mcl.m_particles));
 	m_estimatedPose.data.position.x = estPose.x();
 	m_estimatedPose.data.position.y = estPose.y();
 	m_estimatedPose.data.heading    = estPose.phi();
@@ -493,21 +488,22 @@ RTC::ReturnCode_t Localization_MRPT::onRateChanged(RTC::UniqueId ec_id)
 }
 */
 
-std::vector<std::string> StringToVector(std::string str){
+std::vector<std::string> Localization_MRPT::StringToVector(std::string str){
 	std::vector<std::string> v;
 	boost::algorithm::split(v, str, boost::is_any_of(","));
 	return v;
 }
 
-std::string VectorToString(std::vector<string> v){
+std::string Localization_MRPT::VectorToString(std::vector<string> v){
 	std::string str;
-	for (int i = 0; i < v.size(); i++){
+	str += v[0];
+	for (int i = 1; i < v.size()-1; i++){
 		str += "," + v[i];
 	}
 	return str;
 }
 
-void update_conf(std::string param, std::string new_val)
+void Localization_MRPT::update_conf(std::string param, std::string new_val)
 {
 	std::string cmd = "rtconf localhost/LocalizationMRPT0.rtc set" + param + " " + new_val;
 	system(cmd.c_str());
