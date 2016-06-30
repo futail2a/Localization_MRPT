@@ -491,6 +491,9 @@ class Localization_MRPT
 	 
      void update_conf(std::string param, std::string new_val);
 
+	 std::vector<std::string> StringToVector(std::string str);
+	 std::string VectorToString(std::vector<string> v);
+
 	 bool m_odomUpdated, m_rangeUpdated;
 
 	 

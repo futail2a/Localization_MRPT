@@ -9,6 +9,7 @@
 
 #include "Localization_MRPT.h"
 #include "MonteCarloLocalization.h"
+#include <boost/algorithm/string.hpp>
 
 // Module specification
 // <rtc-template block="module_spec">
@@ -457,8 +458,6 @@ RTC::ReturnCode_t Localization_MRPT::onExecute(RTC::UniqueId ec_id)
 }
 
 
-
-
 /*
 RTC::ReturnCode_t Localization_MRPT::onAborting(RTC::UniqueId ec_id)
 {
@@ -493,6 +492,20 @@ RTC::ReturnCode_t Localization_MRPT::onRateChanged(RTC::UniqueId ec_id)
   return RTC::RTC_OK;
 }
 */
+
+std::vector<std::string> StringToVector(std::string str){
+	std::vector<std::string> v;
+	boost::algorithm::split(v, str, boost::is_any_of(","));
+	return v;
+}
+
+std::string VectorToString(std::vector<string> v){
+	std::string str;
+	for (int i = 0; i < v.size(); i++){
+		str += "," + v[i];
+	}
+	return str;
+}
 
 void update_conf(std::string param, std::string new_val)
 {
