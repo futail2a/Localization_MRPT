@@ -440,6 +440,12 @@ RTC::ReturnCode_t Localization_MRPT::onExecute(RTC::UniqueId ec_id)
   if(m_rangeUpdated && m_odomUpdated) {
     mrpt::poses::CPose2D estPose;
     estPose = mcl.getEstimatedPose();
+	/*for (int i = 0; i < mcl.m_particles.size(); i += 4){
+		std::cout << mcl.m_particles[i] << std::endl;
+		std::cout << mcl.m_particles[i+1]  << std::endl;
+		std::cout << mcl.m_particles[i+2]  << std::endl;
+		std::cout << mcl.m_particles[i+3]  << std::endl;
+	}*/
 	m_estimatedPose.data.position.x = estPose.x();
 	m_estimatedPose.data.position.y = estPose.y();
 	m_estimatedPose.data.heading    = estPose.phi();

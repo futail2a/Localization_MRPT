@@ -79,6 +79,7 @@ void  MCLocalization_MRPT::initialize(){
 			  m_map.getYMin(), m_map.getYMax(),
 			  -M_PI, M_PI, m_particles_count);//, m_min_phi, m_max_phi);
 
+	std::vector<std::string> m_particles(pdf_.m_particles.size()*4);
 	m_particles = extractParticleParams(pdf_);
 }
 
@@ -121,10 +122,9 @@ bool MCLocalization_MRPT::addRange(const ssr::Range& range)
 }
 
 mrpt::poses::CPose2D MCLocalization_MRPT::getEstimatedPose(){
-	//StringToObject(m_particles, pdf_);
-	//pdf_.copyFrom(m_particles);
+	//setParticleParams(m_particles, pdf_);
 	pf_.executeOn(pdf_, &m_ActionCollection, &m_SensoryFrame, &pf_stats_);
-	//m_particles = ObjectToString(pdf_);
+	m_particles = extractParticleParams(pdf_);
 	return pdf_.getMeanVal();
 }
 
@@ -163,7 +163,7 @@ void MCLocalization_MRPT::OGMap2COccupancyGridMap(RTC::OGMap ogmap, mrpt::maps::
 }
 
 std::vector<std::string> MCLocalization_MRPT::extractParticleParams(mrpt::slam::CMonteCarloLocalization2D &pdf_){
-	std::vector<std::string> particle_params;
+	std::vector<std::string> particle_params(pdf_.m_particles.size()*4);
 	for (int i = 0; i < pdf_.m_particles.size(); i += 4){
 		particle_params[i] = std::to_string(pdf_.m_particles[i].d->x());
 		particle_params[i + 1] = std::to_string(pdf_.m_particles[i].d->y());
@@ -173,12 +173,11 @@ std::vector<std::string> MCLocalization_MRPT::extractParticleParams(mrpt::slam::
 	return particle_params;
 }
 void MCLocalization_MRPT::setParticleParams(std::vector<std::string> particle_params, mrpt::slam::CMonteCarloLocalization2D &pdf_){
-	std::size_t ei;
 	for (int i = 0; i < pdf_.m_particles.size(); i += 4){
 		pdf_.m_particles[i].d->x(atof(particle_params[i].c_str()));
-		pdf_.m_particles[i + 1].d->y(atof(particle_params[i + 1].c_str()));
-		pdf_.m_particles[i + 2].d->phi(atof(particle_params[i + 2].c_str()));
-		pdf_.m_particles[i + 3].log_w = atof(particle_params[i + 3].c_str());
+		pdf_.m_particles[i].d->y(atof(particle_params[i + 1].c_str()));
+		pdf_.m_particles[i].d->phi(atof(particle_params[i + 2].c_str()));
+		pdf_.m_particles[i].log_w = atof(particle_params[i + 3].c_str());
 	}
 }
 
