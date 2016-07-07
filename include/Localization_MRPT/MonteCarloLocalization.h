@@ -23,6 +23,8 @@
 #include <mrpt/obs/CActionCollection.h>
 #include <mrpt/utils/CTicTac.h>
 #include <mrpt/poses/CPose2D.h>
+#include <Python.h>
+#include <boost/algorithm/string.hpp>
 
 /*
 using namespace RTC;
@@ -334,7 +336,8 @@ namespace ssr{
 		double m_rayTracing_stdHit;
 		int m_consensus_takeEachRange;
 		int m_consensus_pow;
-	
+		void update_conf(std::string param, std::string new_val);
+
 	public:
 		EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 		

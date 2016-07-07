@@ -6,8 +6,6 @@
  *
  * $Id$
  */
-#include <Python.h>
-#include <boost/algorithm/string.hpp>
 #include "Localization_MRPT.h"
 #include "MonteCarloLocalization.h"
 
@@ -501,22 +499,7 @@ std::string Localization_MRPT::VectorToString(std::vector<string> v){
 
 void Localization_MRPT::update_conf(std::string param, std::string new_val)
 {
-	//std::string cmd = "rtshell.rtconf localhost/rausu.host_cxt/Localization_MRPT0.rtc set " + param + " " + new_val;
-	std::string cmd = "str=['/localhost/rausu.host_cxt/Localization_MRPT0.rtc','set', '" + param + "','" + new_val + "']";
-	char* script = new char[cmd.length() + 1];
-	memcpy(script, cmd.c_str(), cmd.length() + 1);
-	//std::cout << script << std::endl;
-	
-	Py_Initialize();
-	PyRun_SimpleString("import sys\nsys.path.append('C:/Python27/Lib/site-packages/rtshell')\n");
-	PyRun_SimpleString("from rtshell import rtconf");
-	PyRun_SimpleString(script);
-	PyRun_SimpleString("rtshell.rtconf.main(str)");
-	Py_Finalize();
-
-	//std::ofstream ofs("C:/Users/ogata/Desktop/particlelog.csv");
-	//ofs << cmd;
-	//system(cmd.c_str());
+	mcl.update_conf(param, new_val);
 }
 
 extern "C"

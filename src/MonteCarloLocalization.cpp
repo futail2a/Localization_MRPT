@@ -192,3 +192,24 @@ void MCLocalization_MRPT::TimedPose2D2CPose2D(const RTC::TimedPose2D & tp, mrpt:
 		cp.y(map.map.row + tp.data.position.y / map.config.yScale);
 		cp.phi(tp.data.heading);
 	}
+
+
+void MCLocalization_MRPT::update_conf(std::string param, std::string new_val)
+{
+	//std::string cmd = "rtshell.rtconf localhost/rausu.host_cxt/Localization_MRPT0.rtc set " + param + " " + new_val;
+	std::string cmd = "str=['/localhost/rausu.host_cxt/Localization_MRPT0.rtc','set', '" + param + "','" + new_val + "']";
+	char* script = new char[cmd.length() + 1];
+	memcpy(script, cmd.c_str(), cmd.length() + 1);
+	//std::cout << script << std::endl;
+
+	Py_Initialize();
+	PyRun_SimpleString("import sys\nsys.path.append('C:/Python27/Lib/site-packages/rtshell')\n");
+	PyRun_SimpleString("from rtshell import rtconf");
+	PyRun_SimpleString(script);
+	PyRun_SimpleString("rtshell.rtconf.main(str)");
+	Py_Finalize();
+
+	//std::ofstream ofs("C:/Users/ogata/Desktop/particlelog.csv");
+	//ofs << cmd;
+	//system(cmd.c_str());
+}
