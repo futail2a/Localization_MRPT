@@ -6,9 +6,7 @@
  *
  * $Id$
  */
-#include <Python.h>
 //#include <boost/python.hpp>
-#include <boost/algorithm/string.hpp>
 #include "Localization_MRPT.h"
 #include "MonteCarloLocalization.h"
 
