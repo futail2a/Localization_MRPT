@@ -507,7 +507,7 @@ void Localization_MRPT::update_conf(std::string param, std::string new_val)
 
 	//edit rtconf command
 	//std::string cmd = "cmd = 'rtconf /localhost/rausu.host_cxt/Localization_MRPT0.rtc set " + param + " " + new_val+"'";
-	std::string cmd = "cmd=['/localhost/rausu.host_cxt/Localization_MRPT0.rtc','set', '" + param + "','" + new_val + "']";
+	std::string cmd = "from rtshell import rtconf\ndef update():\n    cmd=['/localhost/rausu.host_cxt/Localization_MRPT0.rtc','set', '" + param + "','0," + new_val + "']\n    rtconf.main(cmd)";
 	char* char_cmd = new char[cmd.length() + 1];
 	memcpy(char_cmd, cmd.c_str(), cmd.length() + 1);
 	
@@ -541,13 +541,22 @@ void Localization_MRPT::update_conf(std::string param, std::string new_val)
 	std::cout<< sTmp <<std::endl;
 	*/
 
-	PyRun_SimpleString("from rtshell import rtconf");
-	PyRun_SimpleString(char_cmd);
-	PyRun_SimpleString("rtconf.main(cmd)");
+	//PyRun_SimpleString("from rtshell import rtconf");
+	//PyRun_SimpleString(char_cmd);
+	//PyRun_SimpleString("rtconf.main(cmd)");
 
-	//std::ofstream ofs("C:/Users/ogata/Desktop/particlelog.csv");
-	//ofs << cmd;
-	//system(cmd.c_str());
+	std::ofstream ofs("./particlelog.py");
+	ofs << cmd;
+
+	PyObject *pModule;
+    PyObject *fobj = PyFile_FromString("particlelog.py", "r");
+	if (fobj != NULL) {
+		PyRun_AnyFile(PyFile_AsFile(fobj), "particlelog.py");
+		Py_DECREF(fobj);
+	}
+
+	//pModule = PyImport_ImportModule("particlelog");
+	//pTmp = PyObject_CallMethod(pModule, "update", NULL);
 	Py_Finalize();
 }
 
