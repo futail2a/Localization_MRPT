@@ -506,8 +506,8 @@ void Localization_MRPT::update_conf(std::string param, std::string new_val)
 	Py_Initialize();
 
 	//edit rtconf command
-	//std::string cmd = "cmd = 'rtconf /localhost/rausu.host_cxt/Localization_MRPT0.rtc set " + param + " " + new_val+"'";
-	std::string cmd = "from rtshell import rtconf\ndef update():\n    cmd=['/localhost/rausu.host_cxt/Localization_MRPT0.rtc','set', '" + param + "','0," + new_val + "']\n    rtconf.main(cmd)";
+	std::string cmd = "cmd = 'rtconf /localhost/rausu.host_cxt/Localization_MRPT0.rtc set " + param + " " + new_val+"'";
+	//std::string cmd = "from rtshell import rtconf\ndef update():\n    cmd=['/localhost/rausu.host_cxt/Localization_MRPT0.rtc','set', '" + param + "','0," + new_val + "']\n    rtconf.main(cmd)";
 	char* char_cmd = new char[cmd.length() + 1];
 	memcpy(char_cmd, cmd.c_str(), cmd.length() + 1);
 	
@@ -520,31 +520,18 @@ void Localization_MRPT::update_conf(std::string param, std::string new_val)
 	*/
 
 	
-	/*
-	//PyRun_SimpleString("import sys\nprint sys.path");
-	PyObject *rtshell, *pTmp;
-	char *sTmp;
-	rtshell = PyImport_ImportModule("import my_rtconf");
-	//pTmp = PyObject_CallMethod(rtshell, "set_conf_value", script, new_val, "/localhost/rausu.host_cxt/Localization_MRPT0.rtc");
-	pTmp = PyObject_CallMethod(rtshell, "set_conf_value", script, new_val, "/localhost/rausu.host_cxt/Localization_MRPT0.rtc");
-	PyArg_Parse(pTmp, "s", &sTmp);
-	//std::cout << sTmp << std::endl;
-	*/
-
-	/*
-	//execute rtconf
-	PyObject *rtshell, *pTmp;
+	/*execute rtconf
+	PyObject *rtshell;
 	char *sTmp;	
 	rtshell = PyImport_ImportModule("from rtctree import component"); 
-	pTmp = PyObject_CallMethod(rtshell, "main", char_cmd); tree?
-	PyArg_Parse(pTmp, "s", &sTmp);
-	std::cout<< sTmp <<std::endl;
+	PyObject_CallMethod(rtshell, "main", char_cmd); 
 	*/
 
-	//PyRun_SimpleString("from rtshell import rtconf");
-	//PyRun_SimpleString(char_cmd);
-	//PyRun_SimpleString("rtconf.main(cmd)");
+	PyRun_SimpleString("import _omnipy\nfrom rtshell import rtconf");
+	PyRun_SimpleString(char_cmd);
+	PyRun_SimpleString("rtconf.main(cmd)");
 
+	/*
 	std::ofstream ofs("./particlelog.py");
 	ofs << cmd;
 
@@ -553,7 +540,7 @@ void Localization_MRPT::update_conf(std::string param, std::string new_val)
 	if (fobj != NULL) {
 		PyRun_AnyFile(PyFile_AsFile(fobj), "particlelog.py");
 		Py_DECREF(fobj);
-	}
+	}*/
 
 	//pModule = PyImport_ImportModule("particlelog");
 	//pTmp = PyObject_CallMethod(pModule, "update", NULL);
